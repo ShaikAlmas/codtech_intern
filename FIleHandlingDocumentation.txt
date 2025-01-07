@@ -1,0 +1,100 @@
+Detailed Documentation on File Handling Methods: Read, Write, and Modify
+File handling in Java allows you to interact with files on the system. You can perform basic operations such as reading, writing, and modifying files. Below is a detailed documentation of each file handling method (readFile, writeFile, and appendToFile), explaining the purpose, parameters, internal workings, and potential exceptions.
+
+-->1. Reading a File: readFile(String filePath)
+Purpose:
+The readFile method opens a specified file, reads its content, and displays it to the console. It reads the file line by line, printing each line until the end of the file is reached.
+
+>>Method Signature:
+public static void readFile(String filePath)
+
+>>Parameters:
+filePath (String): The path to the file to be read. This should be a valid path on your file system.
+Internal Working:
+Scanner: The Scanner object is used to read the file. It is initialized with the File object that points to the file you want to read.
+hasNextLine(): This method checks if there are more lines to read in the file.
+nextLine(): Reads the next line of text from the file and prints it.
+
+>>Code:
+public static void readFile(String filePath) {
+    try (Scanner scanner = new Scanner(new File(filePath))) {
+        System.out.println("Reading file contents:");
+        while (scanner.hasNextLine()) {
+            System.out.println(scanner.nextLine());
+        }
+    } catch (FileNotFoundException e) {
+        System.out.println("Error: File not found. " + e.getMessage());
+    }
+}
+
+Exceptions:
+FileNotFoundException: This exception is thrown if the file specified in the filePath does not exist or the file path is incorrect.
+This exception is caught in the method and an error message is printed.
+
+--> 2. Writing to a File: writeFile(String filePath, String content)
+Purpose:
+The writeFile method writes content to the specified file. If the file already exists, its existing content will be overwritten with the new content. If the file does not exist, it will be created.
+
+>>Method Signature:
+public static void writeFile(String filePath, String content)
+
+>>Parameters:
+filePath (String): The path to the file where the content will be written.
+content (String): The content to be written to the file.
+Internal Working:
+BufferedWriter: A BufferedWriter is used for writing text to a file efficiently. It is wrapped around a FileWriter object that specifies the file to write to.
+write(): This method writes the specified content to the file.
+close(): Automatically closes the BufferedWriter (thanks to try-with-resources), ensuring resources are released.
+
+>>Code:
+public static void writeFile(String filePath, String content) {
+    try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath))) {
+        writer.write(content);
+        System.out.println("Content written to the file successfully.");
+    } catch (IOException e) {
+        System.out.println("Error: An issue occurred while writing to the file. " + e.getMessage());
+    }
+}
+
+Exceptions:
+IOException: This exception is thrown if there is an I/O error during the file writing process (e.g., permission issues or disk space issues).
+This is caught and an error message is printed.
+
+--> 3. Appending to a File: appendToFile(String filePath, String content)
+Purpose:
+The appendToFile method adds new content to the end of an existing file without altering the existing content. It is useful for appending logs, notes, or data over time.
+
+>>Method Signature:
+public static void appendToFile(String filePath, String content)
+
+>>Parameters:
+filePath (String): The path to the file where content will be appended.
+content (String): The content to be appended to the file.
+Internal Working:
+BufferedWriter: Similar to writeFile, a BufferedWriter is used, but this time it is initialized with the FileWriter in append mode (true parameter).
+newLine(): Before appending the content, a new line is added to ensure that the content starts from a new line.
+write(): The method writes the content at the end of the file.
+close(): Automatically closes the BufferedWriter.
+
+>>Code:
+public static void appendToFile(String filePath, String content) {
+    try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath, true))) {
+        writer.newLine();  // Adds a new line before appending
+        writer.write(content);
+        System.out.println("Content appended to the file successfully.");
+    } catch (IOException e) {
+        System.out.println("Error: An issue occurred while appending to the file. " + e.getMessage());
+    }
+}
+Exceptions:
+IOException: Thrown if an I/O error occurs during the append operation (e.g., permission issues, file corruption).
+This is caught and an error message is printed.
+>>Example:
+If the file contains:
+>>Hello, World!
+Welcome to file operations.
+After executing the method with content = "This is an appended line.", the file will be updated to:
+>>Hello, World!
+Welcome to file operations.
+
+This is an appended line.
